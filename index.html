@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            font-size: 25px;
+            text-align: center;
+            min-height: 100px;
+            width: 100px;
+            flex: 1;
+            /*line-height: 100px;*/
+        }
+
+        .big-container {
+            border: solid green 2px;
+            display: flex;
+            height: 300px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .center-container {
+            border: solid red 1px;
+            display: flex;
+
+        }
+
+        .left-container {
+            border: solid red 1px;
+            display: flex;
+            flex-flow: column;
+        }
+
+        .right-container {
+            border: solid red 1px;
+            display: flex;
+            flex-flow: column;
+        }
+
+        .blue {
+            background: blue;
+        }
+
+        .green {
+            background: green;
+        }
+
+        .red {
+            background: red;
+        }
+
+        .orange {
+            background: rgb(255, 123, 0);
+        }
+
+        #display {
+            position: absolute;
+            top: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 25px;
+        }
+    </style>
+
+    <div id="display">display</div>
+
+    <div class="big-container">
+        <div class="left-container">
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </div>
+
+        <div class="center-container">
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </div>
+
+        <div class="right-container">
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </div>
+    </div>
+
+
+    <script>
+
+        function random(number) {
+            return Math.floor(Math.random() * number)
+        }
+
+        let container_left = document.querySelector('.left-container')
+        let container_right = document.querySelector('.right-container')
+        let childrenLeft = container_left.querySelectorAll('.box')
+        let childrenRight = container_right.querySelectorAll('.box')
+        let display = document.getElementById("display")
+        for (let i = 0; i < 3; i++) {
+            childrenLeft[i].addEventListener('click', clickChange)
+            childrenRight[i].addEventListener('click', clickChange)
+        }
+
+        let cubes
+        let color_left
+        let color_right
+        let color
+        let pos
+
+
+        function question(color, color_left, color_right) {
+            this.color
+            this.color_left
+            this.color_right
+            this.correct = 0
+            this.wrong = 0
+        }
+
+
+
+        function regenerate() {
+
+            cubes = ['red', 'green', 'orange', 'blue']
+            pos = random(cubes.length)
+            color = cubes[pos]
+            color_left = cubes[pos == 0 ? 3 : pos - 1]
+            color_right = cubes[pos == 3 ? 0 : pos + 1]
+
+
+            let container_center = document.querySelector('.center-container')
+            let children = container_center.querySelectorAll('.box')
+            children[1].className = "box"
+            children[1].classList.add(color)
+            delete cubes[pos]
+            cubes = cubes.filter(Boolean)
+
+            let side = random(2)
+
+            for (let i = 0; i < 3; i++) {
+                if (!side) {
+                    childrenRight[i].className = "box"
+                    childrenLeft[i].className = "box"
+                    childrenLeft[i].classList.add(cubes[i])
+                }
+                else {
+                    childrenRight[i].className = "box"
+                    childrenLeft[i].className = "box"
+                    childrenRight[i].classList.add(cubes[i])
+                }
+
+            }
+
+        }
+        regenerate()
+
+
+        function clickChange() {
+            console.clear()
+            let ans = this.classList.item(1)
+            if (this.parentElement.classList.item(0) == "left-container") {
+                display.innerHTML = ans == color_left ? "ถูกแล้ว" : "คุณคลิก " + ans + " ผิด ที่ถูกคือทางซ้ายของ " + color + " คือ " + color_left
+            } else {
+                display.innerHTML = ans == color_left ? "ถูกแล้ว" : "คุณคลิก " + ans + " ผิด ที่ถูกคือทางขวาของ " + color + " คือ " + color_right
+            }
+
+            /* เสร็จแล้วเริ่มใหม่ */
+            regenerate()
+        }
+    </script>
+
+
+</body>
+
+</html>
